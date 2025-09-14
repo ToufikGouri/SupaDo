@@ -121,7 +121,7 @@ const AddTaskDrawer = ({
             <Input
               id="image"
               type="file"
-              value={task.image}
+              // value={task.image} // handle properly and show preview of image
               onChange={(e) => handleImageUpload(e)}
             />
           </div>

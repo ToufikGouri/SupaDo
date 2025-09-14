@@ -7,12 +7,28 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import AddTaskDrawer from "./AddTaskDrawer";
 import { emptyTask } from "@/lib/utils";
+import Image from "next/image";
+import { HeartIcon, Trash2Icon } from "lucide-react";
+import Modal from "../Modal";
+import TaskCard from "./TaskCard";
 
 const Tasks = () => {
   let noData = false;
+  // task states
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editTask, setEditTask] = useState<Task>(emptyTask);
+  // modal states
   const [openSheet, setOpenSheet] = useState<boolean>(false);
+  const [openDltModal, setOpenDltModal] = useState<boolean>(false);
+  // layout state
+  const [layout, setLayout] = useState<"list" | "grid">("grid");
+  // search state
+  const [searchResults, setSearchResults] = useState<any>([]);
+
+  // delete task
+  const handleDeleteTask = async (id: number) => {
+    setOpenDltModal(true);
+  };
 
   const mockTask: Task[] = [
     {
@@ -20,20 +36,59 @@ const Tasks = () => {
       title: "Task 1",
       description:
         "This is task 1 description whch is very long and should be truncated and there is some more text to make it even longer",
+      image:
+        "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
     },
     {
       id: 2,
       title: "Task 2",
       description: "This is task 2 which is also the description",
+      // image:
+      //   "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
     },
     {
       id: 3,
       title:
         "This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer -- This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer ",
       description: "This is task 2 which is also the description",
+      image:
+        "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
+    },
+    {
+      id: 3,
+      title:
+        "This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer -- This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer ",
+      description: "This is task 2 which is also the description",
+      image:
+        "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
+    },
+    {
+      id: 3,
+      title:
+        "This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer -- This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer ",
+      description: "This is task 2 which is also the description",
+      image:
+        "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
+    },
+    {
+      id: 3,
+      title:
+        "This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer -- This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer ",
+      description: "This is task 2 which is also the description",
+      image:
+        "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
+    },
+    {
+      id: 3,
+      title:
+        "This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer -- This is a very long title for task 3 which should be displayed properly and here is some more text to make it even longer ",
+      description: "This is task 2 which is also the description",
+      image:
+        "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg",
     },
   ];
 
+  // edit task
   const handleEditTask = (task: Task) => {
     if (!task.description) task.description = "";
     if (!task.image) task.image = "";
@@ -42,6 +97,7 @@ const Tasks = () => {
     setOpenSheet(true);
   };
 
+  // fetch tasks from supabase
   const fetchTasks = async () => {
     try {
       // const { data, error } = await supabase.from("Tasks").select("*");
@@ -79,52 +135,37 @@ const Tasks = () => {
       </div>
       <Separator className="my-4" />
       {/* task section buttons */}
-      <TasksBtns />
+      <TasksBtns
+        layout={layout}
+        setLayout={setLayout}
+        searchResults={searchResults}
+        setSearchResults={setSearchResults}
+      />
       {/* tasks rendering */}
-      <div className="flex flex-col gap-8">
-        <p className="my-4">From Supabase</p>
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className=" bg-primaryCard rounded-lg p-4 hover:shadow-lg transition-shadow"
-          >
-            <h2 className="text-xl font-semibold text-primaryText">
-              {task.title}
-            </h2>
-            {task.description && (
-              <p className="mt-2 text-secondaryText">{task.description}</p>
-            )}
-          </div>
+      {/* <p className="my-4">Mock</p> */}
+      <section
+        className={`w-full grid ${
+          layout === "grid" ? "grid-cols-3" : "grid-cols-1"
+        } gap-4 break-all`}
+      >
+        {mockTask.map((task, idx) => (
+          <TaskCard
+            key={idx}
+            task={task}
+            layout={layout}
+            handleEditTask={handleEditTask}
+            handleDeleteTask={handleDeleteTask}
+          />
         ))}
-        <p className="my-4">Mock</p>
-        <section className="w-full grid grid-cols-3 gap-4 break-all">
-          {mockTask.map((task) => (
-            <div
-              key={task.id}
-              className="max-h-80 bg-primaryCard rounded-lg p-4 hover:shadow-lg transition-shadow overflow-auto"
-              onClick={() => handleEditTask(task)}
-            >
-              <h2 className="text-xl font-semibold text-primaryText">
-                {task.title}
-              </h2>
-
-              {task.description && (
-                <div>
-                  <Separator className="my-2" />
-                  <p className="mt-2 text-secondaryText">{task.description}</p>
-                  <Separator className="my-2" />
-                </div>
-              )}
-            </div>
-          ))}
-        </section>
-      </div>
+      </section>
       {/* Add Task Drawer */}
       <AddTaskDrawer
         openSheet={openSheet}
         setOpenSheet={setOpenSheet}
         editingTask={editTask}
       />
+      {/* Delete modal */}
+      <Modal isOpen={openDltModal} setIsOpen={setOpenDltModal} />
     </div>
   );
 };
