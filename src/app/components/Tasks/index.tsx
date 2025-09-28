@@ -9,16 +9,19 @@ import AddTaskDrawer from "./AddTaskDrawer";
 import { emptyTask } from "@/lib/utils";
 import Image from "next/image";
 import { HeartIcon, Trash2Icon } from "lucide-react";
-import Modal from "../Modal";
+import DeleteModal from "./DeleteModal";
 import TaskCard from "./TaskCard";
+import ViewTaskModal from "./ViewTaskModal";
 
 const Tasks = () => {
   let noData = false;
   // task states
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [currentTask, setCurrentTask] = useState<Task>(emptyTask);
   const [editTask, setEditTask] = useState<Task>(emptyTask);
   // modal states
   const [openSheet, setOpenSheet] = useState<boolean>(false);
+  const [openViewTaskModal, setOpenViewTaskModal] = useState<boolean>(false);
   const [openDltModal, setOpenDltModal] = useState<boolean>(false);
   // layout state
   const [layout, setLayout] = useState<"list" | "grid">("grid");
@@ -97,6 +100,11 @@ const Tasks = () => {
     setOpenSheet(true);
   };
 
+  const handleOnTaskClick = (task: Task) => {
+    setCurrentTask(task);
+    setOpenViewTaskModal(true);
+  };
+
   // fetch tasks from supabase
   const fetchTasks = async () => {
     try {
@@ -142,7 +150,6 @@ const Tasks = () => {
         setSearchResults={setSearchResults}
       />
       {/* tasks rendering */}
-      {/* <p className="my-4">Mock</p> */}
       <section
         className={`w-full grid ${
           layout === "grid" ? "grid-cols-3" : "grid-cols-1"
@@ -153,7 +160,7 @@ const Tasks = () => {
             key={idx}
             task={task}
             layout={layout}
-            handleEditTask={handleEditTask}
+            handleOnTaskClick={handleOnTaskClick}
             handleDeleteTask={handleDeleteTask}
           />
         ))}
@@ -164,8 +171,19 @@ const Tasks = () => {
         setOpenSheet={setOpenSheet}
         editingTask={editTask}
       />
+      {/* View Task Modal */}
+      <ViewTaskModal
+        isOpen={openViewTaskModal}
+        setIsOpen={setOpenViewTaskModal}
+        currentTask={currentTask}
+        handleEditTask={handleEditTask}
+      />
       {/* Delete modal */}
-      <Modal isOpen={openDltModal} setIsOpen={setOpenDltModal} />
+      <DeleteModal
+        isOpen={openDltModal}
+        setIsOpen={setOpenDltModal}
+        currentTask={currentTask}
+      />
     </div>
   );
 };

@@ -6,6 +6,8 @@ type useInfiniteScrollProps = {
     triggerPercent?: number; // e.g., 80 trigger on 80% visibility
 }
 
+// triggerPercent is not working as intended yet/ fix later
+
 export default function useInfiniteScroll({ url, limit = 10, triggerPercent = 80 }: useInfiniteScrollProps) {
     const [data, setData] = useState<any[]>([]);
     const [page, setPage] = useState(1);

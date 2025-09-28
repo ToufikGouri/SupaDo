@@ -1,4 +1,5 @@
 import { Task } from "@/app/types/Tasks";
+import { truncateText } from "@/app/utils/truncateText";
 import { Separator } from "@/components/ui/separator";
 import { HeartIcon, Trash2Icon } from "lucide-react";
 import Image from "next/image";
@@ -7,14 +8,14 @@ import React from "react";
 type TaskCardProps = {
   task: Task;
   layout: "list" | "grid";
-  handleEditTask: (task: Task) => void;
+  handleOnTaskClick: (task: Task) => void;
   handleDeleteTask: (id: number) => void;
 };
 
 const TaskCard = ({
   task,
   layout,
-  handleEditTask,
+  handleOnTaskClick,
   handleDeleteTask,
 }: TaskCardProps) => {
   return (
@@ -24,18 +25,18 @@ const TaskCard = ({
         layout === "list"
           ? "grid grid-flow-col grid-cols-[9fr_2.9fr_0.1fr] justify-between gap-4 py-4 pl-4 pr-2"
           : "flex flex-col justify-between px-4 pt-4"
-      } min-h-40 max-h-84 rounded-lg bg-primaryCard hover:shadow-lg transition-shadow overflow-auto`}
-      onClick={() => handleEditTask(task)}
+      } min-h-40 max-h-84 rounded-lg bg-primaryCard overflow-auto`}
+      onClick={() => handleOnTaskClick(task)}
     >
       <div>
         {/* title */}
-        <h2 className="text-xl font-semibold text-primaryText">{task.title}</h2>
+        <h2 className="text-xl font-semibold text-primaryText">{truncateText(task.title, 25)}</h2>
 
         {/* description */}
         {task.description && (
           <div>
             <Separator className="my-2" />
-            <p className="text-secondaryText">{task.description}</p>
+            <p className="text-secondaryText">{truncateText(task.description, 100)}</p>
           </div>
         )}
       </div>
