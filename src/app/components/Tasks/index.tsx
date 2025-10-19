@@ -3,20 +3,16 @@ import { Task } from "@/app/types/Tasks";
 import React, { useEffect, useState } from "react";
 import TasksBtns from "./TasksBtns";
 import { Separator } from "@/components/ui/separator";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
 import AddTaskDrawer from "./AddTaskDrawer";
 import { emptyTask } from "@/lib/utils";
-import Image from "next/image";
-import { HeartIcon, Trash2Icon } from "lucide-react";
 import DeleteModal from "./DeleteModal";
-import TaskCard from "./TaskCard";
 import ViewTaskModal from "./ViewTaskModal";
+import TaskList from "./TaskList";
+import Header from "../Header";
 
 const Tasks = () => {
-  let noData = false;
+  const noData = false;
   // task states
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [currentTask, setCurrentTask] = useState<Task>(emptyTask);
   const [editTask, setEditTask] = useState<Task>(emptyTask);
   // modal states
@@ -26,7 +22,7 @@ const Tasks = () => {
   // layout state
   const [layout, setLayout] = useState<"list" | "grid">("grid");
   // search state
-  const [searchResults, setSearchResults] = useState<any>([]);
+  const [searchResults, setSearchResults] = useState<Task[]>([]);
 
   // delete task
   const handleDeleteTask = async (id: number) => {
@@ -105,22 +101,6 @@ const Tasks = () => {
     setOpenViewTaskModal(true);
   };
 
-  // fetch tasks from supabase
-  const fetchTasks = async () => {
-    try {
-      // const { data, error } = await supabase.from("Tasks").select("*");
-      // if (data) setTasks(data);
-    } catch (error) {
-      console.log("error is", error);
-      toast.error(`${error || "Failed to fetch tasks"}`);
-      return;
-    }
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
   // no data screen
   if (noData) {
     return (
@@ -132,15 +112,7 @@ const Tasks = () => {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold text-primary">My Tasks</h1>
-        <div>
-          Statistics
-          {/* total tasks */}
-          {/* high priority tasks */}
-          {/* faviorite tasks */}
-        </div>
-      </div>
+      <Header />
       <Separator className="my-4" />
       {/* task section buttons */}
       <TasksBtns
@@ -150,21 +122,11 @@ const Tasks = () => {
         setSearchResults={setSearchResults}
       />
       {/* tasks rendering */}
-      <section
-        className={`w-full grid ${
-          layout === "grid" ? "grid-cols-3" : "grid-cols-1"
-        } gap-4 break-all`}
-      >
-        {mockTask.map((task, idx) => (
-          <TaskCard
-            key={idx}
-            task={task}
-            layout={layout}
-            handleOnTaskClick={handleOnTaskClick}
-            handleDeleteTask={handleDeleteTask}
-          />
-        ))}
-      </section>
+      <TaskList
+        layout={layout}
+        handleOnTaskClick={handleOnTaskClick}
+        handleDeleteTask={handleDeleteTask}
+      />
       {/* Add Task Drawer */}
       <AddTaskDrawer
         openSheet={openSheet}

@@ -10,6 +10,7 @@ type TaskCardProps = {
   layout: "list" | "grid";
   handleOnTaskClick: (task: Task) => void;
   handleDeleteTask: (id: number) => void;
+  lastCardRef?: React.Ref<HTMLDivElement>;
 };
 
 const TaskCard = ({
@@ -17,16 +18,16 @@ const TaskCard = ({
   layout,
   handleOnTaskClick,
   handleDeleteTask,
+  lastCardRef,
 }: TaskCardProps) => {
   return (
     <div
-      key={task.id}
-      className={`relative cursor-pointer ${
-        layout === "list"
-          ? "grid grid-flow-col grid-cols-[9fr_2.9fr_0.1fr] justify-between gap-4 py-4 pl-4 pr-2"
-          : "flex flex-col justify-between px-4 pt-4"
-      } min-h-40 max-h-84 rounded-lg bg-primaryCard overflow-auto`}
+      className={`relative cursor-pointer ${layout === "list"
+        ? "grid grid-flow-col grid-cols-[9fr_2.9fr_0.1fr] justify-between gap-4 py-4 pl-4 pr-2"
+        : "flex flex-col justify-between px-4 pt-4"
+        } min-h-40 max-h-84 rounded-lg bg-primaryCard overflow-auto`}
       onClick={() => handleOnTaskClick(task)}
+      ref={lastCardRef}
     >
       <div>
         {/* title */}
@@ -45,9 +46,8 @@ const TaskCard = ({
       {task.image ? (
         <div>
           <div
-            className={`relative ${
-              layout === "list" ? "w-full h-40" : "w-full h-40"
-            }`}
+            className={`relative ${layout === "list" ? "w-full h-40" : "w-full h-40"
+              }`}
           >
             <Image
               src={task.image}
@@ -64,20 +64,18 @@ const TaskCard = ({
       {/* buttons */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-primaryCard flex cursor-default ${
-          layout === "list"
-            ? "gap-2"
-            : "sticky bottom-0 pb-4 flex-col justify-between"
-        }`}
+        className={`bg-primaryCard flex cursor-default ${layout === "list"
+          ? "gap-2"
+          : "sticky bottom-0 pb-4 flex-col justify-between"
+          }`}
       >
         <Separator
           className="my-2"
           orientation={layout === "list" ? "vertical" : "horizontal"}
         />
         <div
-          className={`flex items-center justify-between ${
-            layout === "list" ? "flex-col" : ""
-          }`}
+          className={`flex items-center justify-between ${layout === "list" ? "flex-col" : ""
+            }`}
         >
           <div>
             <Trash2Icon
@@ -90,7 +88,7 @@ const TaskCard = ({
             <HeartIcon
               size={18}
               className={`cursor-pointer text-red-700 fill-red-700`}
-              onClick={() => {}}
+              onClick={() => { }}
             />
           </div>
         </div>

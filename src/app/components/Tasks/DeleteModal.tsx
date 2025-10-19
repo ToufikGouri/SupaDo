@@ -15,13 +15,13 @@ import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Task } from "../../types/Tasks";
 
-type ModalProps = {
+type DeleteModalProps = {
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
   currentTask: Task;
 };
 
-const Modal = ({ isOpen, setIsOpen, currentTask }: ModalProps) => {
+const DeleteModal = ({ isOpen, setIsOpen, currentTask }: DeleteModalProps) => {
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
 
   const handleDeleteTask = () => {
@@ -73,4 +73,4 @@ const Modal = ({ isOpen, setIsOpen, currentTask }: ModalProps) => {
   );
 };
 
-export default Modal;
+export default DeleteModal;
