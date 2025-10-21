@@ -1,10 +1,14 @@
 import React from "react";
 import { LoaderCircleIcon } from "lucide-react";
 
-const Loader = () => {
+type LoaderProps = {
+  className?: string;
+}
+
+const Loader = ({ className = "" }: LoaderProps) => {
   return (
-    <div className="animate-spin">
-      <LoaderCircleIcon />
+    <div className={className}>
+      <LoaderCircleIcon className="animate-spin" />
     </div>
   );
 };

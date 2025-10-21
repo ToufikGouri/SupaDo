@@ -1,11 +1,10 @@
-import React from "react";
-import Tasks from "./components/Tasks/index";
+import React  from "react";
+import PageBase from "./PageBase";
 
 const Home = () => {
+
   return (
-    <div className="flex p-4 m-10">
-      <Tasks />
-    </div>
+    <PageBase />
   );
 };
 
